@@ -42,13 +42,12 @@ public class Producer {
     }
 
     /**
-     * Метод отправки сообщения в Kafka
+     * Send messsage
      *
      * @param value сообщение
      * @param taskId
      */
     public void sendMessage(String value, String taskId) {
-        // надо ввести id задания и писать в конкретный топик или партицию
         try {
             if (value == null) {
                 throw new Exception("Bad task format - null. Task id = " + taskId);
