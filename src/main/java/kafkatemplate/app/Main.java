@@ -47,20 +47,17 @@ public class Main {
                 executor.submit(consumer);
             }
             
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    consumers.forEach(Consumer::shutdown);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                consumers.forEach(Consumer::shutdown);
 
-                    executor.shutdown();
+                executor.shutdown();
 
-                    try {
-                        executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
-                    } catch (Exception e) {
-                        logger.warn(e.toString());
-                    }
+                try {
+                    executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
+                } catch (Exception e) {
+                    logger.warn(e.toString());
                 }
-            });
+            }));
 
         } catch (Exception e) {
             logger.warn(e.toString());
