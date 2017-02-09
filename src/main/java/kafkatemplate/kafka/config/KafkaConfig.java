@@ -5,14 +5,14 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -41,8 +41,8 @@ public class KafkaConfig {
 
         try {
             result = init();
-        } catch (Exception e) {
-            log.severe(e.toString());
+        } catch (IOException e) {
+            log.error(e.toString());
         }
 
         PROPERTIES_INIT_DONE = result;
@@ -76,7 +76,7 @@ public class KafkaConfig {
         return topicsTasks;
     }
 
-    private static boolean init() throws Exception {
+    private static boolean init() throws IOException {
         InputStream in = KafkaConfig.class.getClassLoader().getResourceAsStream(KAFKA_PROPERTIES_FILE);
         Properties prop = new Properties();
 
@@ -108,8 +108,6 @@ public class KafkaConfig {
         kafkaProducerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
         kafkaProducerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProducerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
-        log.log(Level.CONFIG, "DONE!");
 
         return true;
     }

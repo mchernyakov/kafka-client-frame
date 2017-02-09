@@ -1,12 +1,12 @@
 package kafkatemplate.kafka;
 
+import kafkatemplate.kafka.config.KafkaConfig;
+import kafkatemplate.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.log4j.Logger;
-import kafkatemplate.kafka.config.KafkaConfig;
-import kafkatemplate.process.Processor;
 
 import java.util.List;
 import java.util.Properties;
@@ -35,9 +35,8 @@ public class Consumer implements Runnable {
      * @param kafkaConsumerProperties properties
      * @param topics topics
      * @param processor object impl processor
-     * @throws Exception
      */
-    public Consumer(int id, Properties kafkaConsumerProperties, List<String> topics, Processor processor) throws Exception {
+    public Consumer(int id, Properties kafkaConsumerProperties, List<String> topics, Processor processor) {
 
         if (KafkaConfig.PROPERTIES_INIT_DONE) {
             this.processor = processor;
@@ -46,7 +45,7 @@ public class Consumer implements Runnable {
             this.consumer = new KafkaConsumer<>(kafkaConsumerProperties);
 
         } else {
-            throw new Exception("Error in init Kafka consumer properties");
+            throw new IllegalArgumentException("Error in init Kafka consumer properties");
         }
     }
 
@@ -75,7 +74,7 @@ public class Consumer implements Runnable {
         } catch (Exception e) {
 
             if (!closed.get()) {
-                log.warn(e.toString());
+                log.error(e.toString());
             }
         } finally {
             consumer.close();

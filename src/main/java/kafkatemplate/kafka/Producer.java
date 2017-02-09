@@ -1,9 +1,9 @@
 package kafkatemplate.kafka;
 
+import kafkatemplate.kafka.config.KafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
-import kafkatemplate.kafka.config.KafkaConfig;
 
 
 /**
@@ -28,29 +28,24 @@ public class Producer {
     }
 
     private Producer() {
-        try {
 
-            if (KafkaConfig.PROPERTIES_INIT_DONE) {
-                producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
-            } else {
-                throw new Exception("Error in init kafkaProducerPropeties");
-            }
-
-        } catch (Exception e) {
-            log.warn(e.toString());
+        if (KafkaConfig.PROPERTIES_INIT_DONE) {
+            producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
+        } else {
+            throw new IllegalArgumentException("Error in init kafkaProducerPropeties");
         }
     }
 
     /**
      * Send messsage
      *
-     * @param value сообщение
+     * @param value  сообщение
      * @param taskId
      */
     public void sendMessage(String value, String taskId) {
         try {
             if (value == null) {
-                throw new Exception("Bad task format - null. Task id = " + taskId);
+                throw new IllegalArgumentException("Bad task format - null. Task id = " + taskId);
             }
 
             producerRecord = new ProducerRecord<>(KafkaConfig.getTopicResult(), KafkaConfig.getKey(), value);
@@ -59,14 +54,14 @@ public class Producer {
                     (metadata, e) -> {
                         if (e == null) {
                             log.info("Message Delivered Successfully. TaskId = " + taskId);
-                            log.debug("Message:value = "+producerRecord.value());
+                            log.debug("Message:value = " + producerRecord.value());
                         } else {
                             log.warn(e.toString());
                         }
 
                     });
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             log.warn(e.toString());
         }
     }
