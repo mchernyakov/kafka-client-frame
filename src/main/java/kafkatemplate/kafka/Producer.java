@@ -18,13 +18,13 @@ public class Producer {
     private ProducerRecord<String, String> producerRecord;
     private KafkaProducer<String, String> producer;
 
-    public static class AnalysisProducerHolder {
+    public static class ProducerHolder {
 
         static final Producer HOLDER_INSTANCE = new Producer();
     }
 
     public static Producer getInstance() {
-        return AnalysisProducerHolder.HOLDER_INSTANCE;
+        return ProducerHolder.HOLDER_INSTANCE;
     }
 
     private Producer() {
