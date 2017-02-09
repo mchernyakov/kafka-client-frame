@@ -46,13 +46,11 @@ public class Main {
 
                 executor.submit(consumer);
             }
-
+            
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    consumers.stream().forEach((consumer) -> {
-                        consumer.shutdown();
-                    });
+                    consumers.forEach(Consumer::shutdown);
 
                     executor.shutdown();
 
