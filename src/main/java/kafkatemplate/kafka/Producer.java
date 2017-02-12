@@ -43,11 +43,9 @@ public class Producer {
      * @param taskId
      */
     public void sendMessage(String value, String taskId) {
-        try {
-            if (value == null) {
-                throw new IllegalArgumentException("Bad task format - null. Task id = " + taskId);
-            }
-
+        if (value == null) {
+            log.warn("Bad task format - null. Task id = " + taskId);
+        } else {
             producerRecord = new ProducerRecord<>(KafkaConfig.getTopicResult(), KafkaConfig.getKey(), value);
 
             producer.send(producerRecord,
@@ -60,9 +58,7 @@ public class Producer {
                         }
 
                     });
-
-        } catch (IllegalArgumentException e) {
-            log.warn(e.toString());
         }
+
     }
 }

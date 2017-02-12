@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -31,10 +32,11 @@ public class Consumer implements Runnable {
 
     /**
      * Constructor of consumer
-     * @param id id num
+     *
+     * @param id                      id num
      * @param kafkaConsumerProperties properties
-     * @param topics topics
-     * @param processor object impl processor
+     * @param topics                  topics
+     * @param processor               object impl processor
      */
     public Consumer(int id, Properties kafkaConsumerProperties, List<String> topics, Processor processor) {
 
@@ -54,14 +56,14 @@ public class Consumer implements Runnable {
         try {
             consumer.subscribe(topics);
 
-            log.info("Start analysis consumer id: "+this.id);
+            log.info("Start analysis consumer id: " + this.id);
 
             while (!closed.get()) {
 
                 ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
 
                 for (ConsumerRecord<String, String> record : records) {
-                   processor.process(record.value());
+                    processor.process(record.value());
                 }
 
                 try {
@@ -71,11 +73,7 @@ public class Consumer implements Runnable {
                     log.warn(e.toString());
                 }
             }
-        } catch (Exception e) {
 
-            if (!closed.get()) {
-                log.error(e.toString());
-            }
         } finally {
             consumer.close();
         }
