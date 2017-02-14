@@ -27,7 +27,7 @@ public class Consumer implements Runnable {
 
     private KafkaConsumer<String, String> consumer;
     private int id;
-    private final Processor processor;
+    private final List<? extends Processor> processors;
     private final List<String> topics;
 
     /**
@@ -36,18 +36,22 @@ public class Consumer implements Runnable {
      * @param id                      id num
      * @param kafkaConsumerProperties properties
      * @param topics                  topics
-     * @param processor               object impl processor
+     * @param processors              object impl processors
      */
-    public Consumer(int id, Properties kafkaConsumerProperties, List<String> topics, Processor processor) {
+    public Consumer(
+            int id,
+            Properties kafkaConsumerProperties,
+            List<String> topics,
+            List<? extends Processor> processors
+    ) {
 
         if (KafkaConfig.PROPERTIES_INIT_DONE) {
-            this.processor = processor;
+            this.processors = processors;
             this.topics = topics;
             this.id = id;
             this.consumer = new KafkaConsumer<>(kafkaConsumerProperties);
-
         } else {
-            throw new IllegalArgumentException("Error in init Kafka consumer properties");
+            throw new IllegalStateException("Error in init Kafka consumer properties");
         }
     }
 
@@ -63,7 +67,8 @@ public class Consumer implements Runnable {
                 ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
 
                 for (ConsumerRecord<String, String> record : records) {
-                    processor.process(record.value());
+                    processors.forEach(processor ->
+                            processor.process(record.value()));
                 }
 
                 try {

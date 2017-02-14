@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -26,15 +27,15 @@ public class KafkaConfig {
 
     public static final boolean PROPERTIES_INIT_DONE;
 
-    private static Properties kafkaConsumerProperties;
-    private static Properties kafkaProducerProperties;
+    private static Properties kafkaConsumerProperties = new Properties();
+    private static Properties kafkaProducerProperties = new Properties();
     private static String kafkaServer;
     private static String topicResult;
     private static String key;
-    private static int numConsumers;
+    private static int numConsumers = 0;
     private static String groupId;
 
-    private static List<String> topicsTasks;
+    private static List<String> topicsTasks = new ArrayList<>();
 
     static {
         boolean result = false;
@@ -96,7 +97,6 @@ public class KafkaConfig {
         String[] items = prop.getProperty("topic.task").split(",");
         topicsTasks = Arrays.asList(items);
 
-        kafkaConsumerProperties = new Properties();
         kafkaConsumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
         kafkaConsumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         kafkaConsumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -104,7 +104,6 @@ public class KafkaConfig {
         kafkaConsumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         kafkaConsumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
 
-        kafkaProducerProperties = new Properties();
         kafkaProducerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
         kafkaProducerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProducerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());

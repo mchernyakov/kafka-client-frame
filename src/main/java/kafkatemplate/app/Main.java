@@ -5,6 +5,7 @@ import kafkatemplate.kafka.config.KafkaConfig;
 import kafkatemplate.process.impl.Sample;
 import org.apache.log4j.Logger;
 
+import javax.xml.ws.soap.Addressing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,17 +32,17 @@ public class Main {
         List<Consumer> consumers = new ArrayList<>();
         for (int i = 0; i < numConsumers; i++) {
 
-            Sample sample = new Sample("hello world " + i);
+            List<Sample> samples = new ArrayList<>();
+            samples.add(new Sample());
 
             Consumer consumer = new Consumer(
                     i,
                     KafkaConfig.getKafkaConsumerProperties(),
                     KafkaConfig.getTopicsTasks(),
-                    sample
+                    samples
             );
 
             consumers.add(consumer);
-
             executor.submit(consumer);
         }
 
