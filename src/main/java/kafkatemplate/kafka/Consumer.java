@@ -45,14 +45,11 @@ public class Consumer implements Runnable {
             List<? extends Processor> processors
     ) {
 
-        if (KafkaConfig.PROPERTIES_INIT_DONE) {
-            this.processors = processors;
-            this.topics = topics;
-            this.id = id;
-            this.consumer = new KafkaConsumer<>(kafkaConsumerProperties);
-        } else {
-            throw new IllegalStateException("Error in init Kafka consumer properties");
-        }
+        this.processors = processors;
+        this.topics = topics;
+        this.id = id;
+        this.consumer = new KafkaConsumer<>(kafkaConsumerProperties);
+
     }
 
     @Override

@@ -5,7 +5,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,16 +15,11 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- *
  * @author chernyakov
  */
 public class KafkaConfig {
 
-    private static Logger log = Logger.getLogger(KafkaConfig.class.getName());
-
     private static final String KAFKA_PROPERTIES_FILE = "./kafka.properties";
-
-    public static final boolean PROPERTIES_INIT_DONE;
 
     private static Properties kafkaConsumerProperties = new Properties();
     private static Properties kafkaProducerProperties = new Properties();
@@ -38,15 +32,12 @@ public class KafkaConfig {
     private static List<String> topicsTasks = new ArrayList<>();
 
     static {
-        boolean result = false;
 
         try {
-            result = init();
+            init();
         } catch (IOException e) {
-            log.error(e.toString());
+            throw new RuntimeException(e.toString());
         }
-
-        PROPERTIES_INIT_DONE = result;
     }
 
     public static int getNumConsumers() {
@@ -77,7 +68,7 @@ public class KafkaConfig {
         return topicsTasks;
     }
 
-    private static boolean init() throws IOException {
+    private static void init() throws IOException {
         InputStream in = KafkaConfig.class.getClassLoader().getResourceAsStream(KAFKA_PROPERTIES_FILE);
         Properties prop = new Properties();
 
@@ -107,7 +98,5 @@ public class KafkaConfig {
         kafkaProducerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
         kafkaProducerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         kafkaProducerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
-        return true;
     }
 }
