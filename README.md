@@ -1,3 +1,5 @@
 # kafka-template
+
 Simple kafka template. Multithreading consumer and singleton producer.
-Interface Processor for consumer
+
+Interface Processor for using data from consumer.
