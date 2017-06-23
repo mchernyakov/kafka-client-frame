@@ -1,6 +1,7 @@
 
 package kafkatemplate.kafka.config;
 
+import kafkatemplate.util.GeneralProperties;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -33,11 +34,8 @@ public class KafkaConfig {
 
     static {
 
-        try {
-            init();
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
+        GeneralProperties generalProperties = new GeneralProperties(KAFKA_PROPERTIES_FILE);
+        init(generalProperties);
     }
 
     public static int getNumConsumers() {
@@ -68,24 +66,16 @@ public class KafkaConfig {
         return topicsTasks;
     }
 
-    private static void init() throws IOException {
-        InputStream in = KafkaConfig.class.getClassLoader().getResourceAsStream(KAFKA_PROPERTIES_FILE);
-        Properties prop = new Properties();
+    private static void init(GeneralProperties prop) {
 
-        if (in != null) {
-            prop.load(in);
-        } else {
-            throw new FileNotFoundException(KAFKA_PROPERTIES_FILE);
-        }
+        kafkaServer = prop.getPropertyAsString("server");
 
-        kafkaServer = prop.getProperty("server");
+        key = prop.getPropertyAsString("key");
+        topicResult = prop.getPropertyAsString("topic.result");
 
-        key = prop.getProperty("key");
-        topicResult = prop.getProperty("topic.result");
-
-        numConsumers = Integer.parseInt(prop.getProperty("num.consumer"));
-        groupId = prop.getProperty("group.id");
-        String[] items = prop.getProperty("topic.task").split(",");
+        numConsumers = prop.getPropertyAsInt("num.consumer");
+        groupId = prop.getPropertyAsString("group.id");
+        String[] items = prop.getPropertyAsString("topic.task").split(",");
         topicsTasks = Arrays.asList(items);
 
         kafkaConsumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);

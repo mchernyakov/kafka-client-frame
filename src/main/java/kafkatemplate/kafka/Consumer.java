@@ -1,12 +1,10 @@
 package kafkatemplate.kafka;
 
-import kafkatemplate.kafka.config.KafkaConfig;
 import kafkatemplate.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.errors.WakeupException;
 import org.apache.log4j.Logger;
 
 import java.util.List;

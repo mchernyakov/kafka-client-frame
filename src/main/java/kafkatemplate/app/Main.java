@@ -5,7 +5,6 @@ import kafkatemplate.kafka.config.KafkaConfig;
 import kafkatemplate.process.impl.Sample;
 import org.apache.log4j.Logger;
 
-import javax.xml.ws.soap.Addressing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -52,7 +51,7 @@ public class Main {
             executor.shutdown();
 
             try {
-                executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
+                executor.awaitTermination(2000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
                 logger.warn(e.toString());
             }

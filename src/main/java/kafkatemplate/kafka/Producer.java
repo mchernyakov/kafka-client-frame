@@ -28,12 +28,7 @@ public class Producer {
     }
 
     private Producer() {
-
-        if (KafkaConfig.PROPERTIES_INIT_DONE) {
-            producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
-        } else {
-            throw new IllegalArgumentException("Error in init kafkaProducerPropeties");
-        }
+        producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
     }
 
     /**
