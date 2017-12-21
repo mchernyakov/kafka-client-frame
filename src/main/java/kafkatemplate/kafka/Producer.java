@@ -51,6 +51,6 @@ public class Producer implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-
+        producer.close();
     }
 }
