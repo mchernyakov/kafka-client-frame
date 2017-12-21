@@ -2,7 +2,6 @@ package kafkatemplate.kafka;
 
 import kafkatemplate.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.log4j.Logger;
@@ -11,31 +10,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
-/**
- * Consumer
- *
- * @author chernyakov
- */
 public class Consumer implements Runnable {
 
-    private static Logger log = Logger.getLogger(Consumer.class.getName());
+    private static Logger logger = Logger.getLogger(Consumer.class.getName());
+
+    private static final int KAFKA_CONNECTION_RETRY_INTERVAL = 30000;
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
-
     private KafkaConsumer<String, String> consumer;
     private int id;
     private final List<? extends Processor> processors;
     private final List<String> topics;
+    private final Properties kafkaConfig;
 
-    /**
-     * Constructor of consumer
-     *
-     * @param id                      id num
-     * @param kafkaConsumerProperties properties
-     * @param topics                  topics
-     * @param processors              object impl processors
-     */
     public Consumer(
             int id,
             Properties kafkaConsumerProperties,
@@ -46,43 +33,58 @@ public class Consumer implements Runnable {
         this.processors = processors;
         this.topics = topics;
         this.id = id;
-        this.consumer = new KafkaConsumer<>(kafkaConsumerProperties);
+        this.kafkaConfig = kafkaConsumerProperties;
 
+    }
+
+    private void connect() {
+        boolean connected = false;
+
+        while (!connected) {
+            try {
+                this.consumer = new KafkaConsumer<>(this.kafkaConfig);
+                this.consumer.subscribe(this.topics);
+
+                connected = true;
+            } catch (Exception e) {
+                logger.error("Failed to connect to kafka", e);
+                try {
+                    Thread.sleep(KAFKA_CONNECTION_RETRY_INTERVAL);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(interruptedException);
+                }
+            }
+        }
     }
 
     @Override
     public void run() {
         try {
-            consumer.subscribe(topics);
+            connect();
 
-            log.info("Start analysis consumer id: " + this.id);
-
+            logger.info("Start consumer id: " + this.id);
             while (!closed.get()) {
 
                 ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
-
-                for (ConsumerRecord<String, String> record : records) {
-                    processors.forEach(processor ->
-                            processor.process(record.value()));
-                }
+                records.forEach(
+                        record ->
+                                processors.forEach(processor ->
+                                        processor.process(record.value())));
 
                 try {
                     consumer.commitSync();
-                    //consumer.commitAsync();
                 } catch (CommitFailedException e) {
-                    log.warn(e.toString());
+                    logger.warn("Failed to commit", e);
                 }
             }
-
         } finally {
             consumer.close();
         }
     }
 
-
     public void shutdown() {
         closed.set(true);
         consumer.wakeup();
     }
-
 }

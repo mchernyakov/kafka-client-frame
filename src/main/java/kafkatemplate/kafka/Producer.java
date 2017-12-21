@@ -5,17 +5,10 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 
+public class Producer implements AutoCloseable {
 
-/**
- * Producer
- *
- * @author chernyakov
- */
-public class Producer {
+    private static Logger logger = Logger.getLogger(Producer.class.getName());
 
-    private static Logger log = Logger.getLogger(Producer.class.getName());
-
-    private ProducerRecord<String, String> producerRecord;
     private KafkaProducer<String, String> producer;
 
     public static class ProducerHolder {
@@ -31,29 +24,33 @@ public class Producer {
         producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
     }
 
+
     /**
      * Send messsage
      *
-     * @param value  сообщение
-     * @param taskId
+     * @param key
+     * @param value
      */
-    public void sendMessage(String value, String taskId) {
+    public void sendMessage(String key, String value) {
         if (value == null) {
-            log.warn("Bad task format - null. Task id = " + taskId);
+            logger.warn("Bad task format - null. Key =" + key);
         } else {
-            producerRecord = new ProducerRecord<>(KafkaConfig.getTopicResult(), KafkaConfig.getKey(), value);
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(KafkaConfig.getTopicResult(), KafkaConfig.getKey(), value);
 
             producer.send(producerRecord,
                     (metadata, e) -> {
                         if (e == null) {
-                            log.info("Message Delivered Successfully. TaskId = " + taskId);
-                            log.debug("Message:value = " + producerRecord.value());
+                            logger.info("Message Delivered Successfully. Key = " + key);
+                            logger.debug("Message:value = " + producerRecord.value());
                         } else {
-                            log.warn(e.toString());
+                            logger.warn(e.toString());
                         }
-
                     });
         }
+    }
+
+    @Override
+    public void close() throws Exception {
 
     }
 }
