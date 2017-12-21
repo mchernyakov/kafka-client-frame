@@ -31,11 +31,11 @@ public class Producer implements AutoCloseable {
      * @param key
      * @param value
      */
-    public void sendMessage(String key, String value) {
+    public void sendMessage(String key, String value, String topic) {
         if (value == null) {
             logger.warn("Bad task format - null. Key =" + key);
         } else {
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(KafkaConfig.getTopicResult(), KafkaConfig.getKey(), value);
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
 
             producer.send(producerRecord,
                     (metadata, e) -> {
