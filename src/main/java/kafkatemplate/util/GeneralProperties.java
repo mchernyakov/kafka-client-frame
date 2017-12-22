@@ -5,12 +5,13 @@ import java.util.Properties;
 /**
  * Класс-обертка над Properties для доступа к свойствам любого типа.
  */
-public class GeneralProperties {
+public final class GeneralProperties {
 
     private final Properties props;
 
     /**
      * Конструктор
+     *
      * @param propertiesFilePath путь к файлу свойств
      */
     public GeneralProperties(String propertiesFilePath) {
@@ -19,8 +20,9 @@ public class GeneralProperties {
 
     /**
      * Конструктор
+     *
      * @param propertiesFilePath путь к файлу свойств
-     * @param unicode интерпретировать ли строки в кодировке UTF-8
+     * @param unicode            интерпретировать ли строки в кодировке UTF-8
      */
     public GeneralProperties(String propertiesFilePath, boolean unicode) {
         this.props = ConfigUtil.initProperties(propertiesFilePath, unicode);

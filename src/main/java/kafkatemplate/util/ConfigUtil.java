@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 
-public class ConfigUtil {
+public final class ConfigUtil {
 
     private ConfigUtil() {
     }
@@ -32,10 +32,11 @@ public class ConfigUtil {
         Properties prop = new Properties();
 
         if (in != null) {
-            if (unicode)
+            if (unicode) {
                 prop.load(new InputStreamReader(in, "UTF-8"));
-            else
+            } else {
                 prop.load(in);
+            }
         } else {
             throw new FileNotFoundException(file);
         }

@@ -18,11 +18,11 @@ public class Consumer implements Runnable {
     private static final int KAFKA_CONNECTION_RETRY_INTERVAL = 30000;
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private KafkaConsumer<String, String> consumer;
     private final List<? extends Processor> processors;
     private final List<String> topics;
     private final Properties kafkaConfig;
 
+    private KafkaConsumer<String, String> consumer;
     private int id;
 
     public Consumer(

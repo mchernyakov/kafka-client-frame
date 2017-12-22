@@ -13,7 +13,7 @@
     </properties>
 
     <dependencies>
-        
+
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
@@ -33,7 +33,6 @@
         </dependency>
 
     </dependencies>
-
 
     <build>
 
@@ -90,6 +89,5 @@
         </plugins>
 
     </build>
-
 
 </project>

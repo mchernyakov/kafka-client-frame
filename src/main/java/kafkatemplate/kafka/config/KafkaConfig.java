@@ -26,7 +26,6 @@ public class KafkaConfig {
     private static Properties kafkaProducerProperties = new Properties();
     private static String kafkaServer;
     private static String topicResult;
-    private static String key;
     private static int numConsumers = 0;
     private static String groupId;
 
@@ -54,10 +53,6 @@ public class KafkaConfig {
         return topicResult;
     }
 
-    public static String getKey() {
-        return key;
-    }
-
     public static String getGroupId() {
         return groupId;
     }
@@ -69,10 +64,7 @@ public class KafkaConfig {
     private static void init(GeneralProperties prop) {
 
         kafkaServer = prop.getPropertyAsString("server");
-
-        key = prop.getPropertyAsString("key");
         topicResult = prop.getPropertyAsString("topic.result");
-
         numConsumers = prop.getPropertyAsInt("num.consumer");
         groupId = prop.getPropertyAsString("group.id");
         String[] items = prop.getPropertyAsString("topic.task").split(",");
