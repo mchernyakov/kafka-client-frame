@@ -4,6 +4,7 @@ import kafkatemplate.process.Processor;
 import kafkatemplate.util.ThreadUtil;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -19,14 +20,14 @@ public class ConsumerPool implements AutoCloseable {
     private final List<? extends Processor> processors;
     private final List<String> topics;
     private final Properties consumerProperties;
-
-    private List<Consumer> consumers;
+    private final List<Consumer> consumers;
 
     public ConsumerPool(int numConsumers, List<? extends Processor> processors, List<String> topics, Properties consumerProperties) {
         this.numConsumers = numConsumers;
         this.processors = processors;
         this.topics = topics;
         this.consumerProperties = consumerProperties;
+        this.consumers = new ArrayList<>();
 
         ThreadFactory threadFactory = ThreadUtil.getThreadFactoryCollection("consumer", false);
         this.executorService = Executors.newFixedThreadPool(numConsumers, threadFactory);
