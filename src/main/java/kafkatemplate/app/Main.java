@@ -1,59 +1,40 @@
 package kafkatemplate.app;
 
-import kafkatemplate.kafka.Consumer;
+import kafkatemplate.kafka.ConsumerPool;
 import kafkatemplate.kafka.config.KafkaConfig;
 import kafkatemplate.process.impl.Sample;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Start class
  *
  * @author chernyakov
  */
-
 public class Main {
 
     private static Logger logger = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
+        List<Sample> samples = new ArrayList<>();
+        samples.add(new Sample());
 
-        int numConsumers = KafkaConfig.getNumConsumers();
-        ExecutorService executor = Executors.newFixedThreadPool(numConsumers);
+        ConsumerPool consumerPool = new ConsumerPool(
+                KafkaConfig.getNumConsumers(),
+                samples,
+                KafkaConfig.getTopicsTasks(),
+                KafkaConfig.getKafkaConsumerProperties()
+        );
 
-        logger.info("Start consumers...");
-
-        List<Consumer> consumers = new ArrayList<>();
-        for (int i = 0; i < numConsumers; i++) {
-
-            List<Sample> samples = new ArrayList<>();
-            samples.add(new Sample());
-
-            Consumer consumer = new Consumer(
-                    i,
-                    KafkaConfig.getKafkaConsumerProperties(),
-                    KafkaConfig.getTopicsTasks(),
-                    samples
-            );
-
-            consumers.add(consumer);
-            executor.submit(consumer);
-        }
+        consumerPool.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            consumers.forEach(Consumer::shutdown);
-
-            executor.shutdown();
-
             try {
-                executor.awaitTermination(2000, TimeUnit.MILLISECONDS);
+                consumerPool.close();
             } catch (Exception e) {
-                logger.warn(e.toString());
+                logger.error("Error while closing consumer pool", e);
             }
         }));
     }

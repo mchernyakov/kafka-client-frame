@@ -4,6 +4,7 @@ import kafkatemplate.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -18,10 +19,11 @@ public class Consumer implements Runnable {
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private KafkaConsumer<String, String> consumer;
-    private int id;
     private final List<? extends Processor> processors;
     private final List<String> topics;
     private final Properties kafkaConfig;
+
+    private int id;
 
     public Consumer(
             int id,
@@ -77,6 +79,10 @@ public class Consumer implements Runnable {
                 } catch (CommitFailedException e) {
                     logger.warn("Failed to commit", e);
                 }
+            }
+        } catch (WakeupException e) {
+            if (!closed.get()) {
+                throw e;
             }
         } finally {
             consumer.close();
