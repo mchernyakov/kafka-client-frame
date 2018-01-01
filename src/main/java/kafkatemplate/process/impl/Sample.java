@@ -6,7 +6,7 @@ import kafkatemplate.process.Processor;
 /**
  * Created by chernyakov on 07.02.17.
  */
-public class Sample implements Processor {
+public class Sample implements Processor<String, String> {
 
     private static Logger log = Logger.getLogger(Sample.class.getName());
 
@@ -20,7 +20,7 @@ public class Sample implements Processor {
     }
 
     @Override
-    public void process(String data) {
-        log.info(data);
+    public void process(String key, String value) {
+        log.info("Receive message: " + key + " " + value);
     }
 }

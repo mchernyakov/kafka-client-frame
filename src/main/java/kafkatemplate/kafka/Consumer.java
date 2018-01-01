@@ -11,25 +11,25 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Consumer implements Runnable {
+public class Consumer<K, V> implements Runnable {
 
     private static Logger logger = Logger.getLogger(Consumer.class.getName());
 
     private static final int KAFKA_CONNECTION_RETRY_INTERVAL = 30000;
 
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private final List<? extends Processor> processors;
+    private final List<? extends Processor<K, V>> processors;
     private final List<String> topics;
     private final Properties kafkaConfig;
 
-    private KafkaConsumer<String, String> consumer;
+    private KafkaConsumer<K, V> consumer;
     private int id;
 
     public Consumer(
             int id,
             Properties kafkaConsumerProperties,
             List<String> topics,
-            List<? extends Processor> processors
+            List<? extends Processor<K, V>> processors
     ) {
 
         this.processors = processors;
@@ -68,11 +68,11 @@ public class Consumer implements Runnable {
             logger.info("Start consumer id: " + this.id);
             while (!closed.get()) {
 
-                ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+                ConsumerRecords<K, V> records = consumer.poll(Long.MAX_VALUE);
                 records.forEach(
                         record ->
                                 processors.forEach(processor ->
-                                        processor.process(record.value())));
+                                        processor.process(record.key(), record.value())));
 
                 try {
                     consumer.commitSync();

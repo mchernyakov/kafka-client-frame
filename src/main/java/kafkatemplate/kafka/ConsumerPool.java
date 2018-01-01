@@ -12,17 +12,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-public class ConsumerPool implements AutoCloseable {
+public class ConsumerPool<K, V> implements AutoCloseable {
     private static Logger logger = Logger.getLogger(ConsumerPool.class.getName());
 
     private final ExecutorService executorService;
     private final int numConsumers;
-    private final List<? extends Processor> processors;
+    private final List<? extends Processor<K, V>> processors;
     private final List<String> topics;
     private final Properties consumerProperties;
-    private final List<Consumer> consumers;
+    private final List<Consumer<K, V>> consumers;
 
-    public ConsumerPool(int numConsumers, List<? extends Processor> processors, List<String> topics, Properties consumerProperties) {
+    public ConsumerPool(int numConsumers, List<? extends Processor<K, V>> processors, List<String> topics, Properties consumerProperties) {
         this.numConsumers = numConsumers;
         this.processors = processors;
         this.topics = topics;
@@ -36,7 +36,7 @@ public class ConsumerPool implements AutoCloseable {
     public void start() {
         logger.info("Start consumers...");
         for (int i = 0; i < numConsumers; i++) {
-            Consumer consumer = new Consumer(
+            Consumer<K, V> consumer = new Consumer<>(
                     i,
                     consumerProperties,
                     topics,

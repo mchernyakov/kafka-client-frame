@@ -5,11 +5,11 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 
-public class Producer implements AutoCloseable {
+public class Producer<K, V> implements AutoCloseable {
 
     private static Logger logger = Logger.getLogger(Producer.class.getName());
 
-    private KafkaProducer<String, String> producer;
+    private KafkaProducer<K, V> producer;
 
     public static class ProducerHolder {
 
@@ -24,18 +24,11 @@ public class Producer implements AutoCloseable {
         producer = new KafkaProducer<>(KafkaConfig.getKafkaProducerProperties());
     }
 
-
-    /**
-     * Send messsage
-     *
-     * @param key
-     * @param value
-     */
-    public void sendMessage(String key, String value, String topic) {
+    public void sendMessage(K key, V value, String topic) {
         if (value == null) {
             logger.warn("Bad task format - null. Key =" + key);
         } else {
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, key, value);
+            ProducerRecord<K, V> producerRecord = new ProducerRecord<>(topic, key, value);
 
             producer.send(producerRecord,
                     (metadata, e) -> {
