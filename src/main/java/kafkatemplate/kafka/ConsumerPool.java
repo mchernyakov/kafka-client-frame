@@ -2,7 +2,8 @@ package kafkatemplate.kafka;
 
 import kafkatemplate.process.Processor;
 import kafkatemplate.util.ThreadUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 public class ConsumerPool<K, V> implements AutoCloseable {
-    private static Logger logger = Logger.getLogger(ConsumerPool.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ConsumerPool.class.getName());
 
     private final ExecutorService executorService;
     private final int numConsumers;

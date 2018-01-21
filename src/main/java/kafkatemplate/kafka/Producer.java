@@ -3,11 +3,12 @@ package kafkatemplate.kafka;
 import kafkatemplate.kafka.config.KafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Producer<K, V> implements AutoCloseable {
 
-    private static Logger logger = Logger.getLogger(Producer.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(Producer.class.getName());
 
     private KafkaProducer<K, V> producer;
 

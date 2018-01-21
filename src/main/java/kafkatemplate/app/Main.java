@@ -3,7 +3,8 @@ package kafkatemplate.app;
 import kafkatemplate.kafka.ConsumerPool;
 import kafkatemplate.kafka.config.KafkaConfig;
 import kafkatemplate.process.impl.Sample;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,13 @@ import java.util.List;
  */
 public class Main {
 
-    private static Logger logger = Logger.getLogger(Main.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
         List<Sample> samples = new ArrayList<>();
         samples.add(new Sample());
 
-        ConsumerPool consumerPool = new ConsumerPool(
+        ConsumerPool consumerPool = new ConsumerPool<>(
                 KafkaConfig.getNumConsumers(),
                 samples,
                 KafkaConfig.getTopicsTasks(),

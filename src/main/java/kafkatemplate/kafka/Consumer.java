@@ -5,7 +5,8 @@ import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Properties;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Consumer<K, V> implements Runnable {
 
-    private static Logger logger = Logger.getLogger(Consumer.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(Consumer.class.getName());
 
     private static final int KAFKA_CONNECTION_RETRY_INTERVAL = 30000;
 
@@ -91,6 +92,8 @@ public class Consumer<K, V> implements Runnable {
 
     public void shutdown() {
         closed.set(true);
-        consumer.wakeup();
+        if (consumer != null) {
+            consumer.wakeup();
+        }
     }
 }
