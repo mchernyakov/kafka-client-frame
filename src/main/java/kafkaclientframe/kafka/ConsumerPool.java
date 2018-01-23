@@ -1,7 +1,7 @@
-package kafkatemplate.kafka;
+package kafkaclientframe.kafka;
 
-import kafkatemplate.process.Processor;
-import kafkatemplate.util.ThreadUtil;
+import kafkaclientframe.process.Processor;
+import kafkaclientframe.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +17,11 @@ public class ConsumerPool<K, V> implements AutoCloseable {
     private static Logger logger = LoggerFactory.getLogger(ConsumerPool.class.getName());
 
     private final ExecutorService executorService;
-    private final int numConsumers;
+    private final List<Consumer<K, V>> consumers;
     private final List<? extends Processor<K, V>> processors;
     private final List<String> topics;
     private final Properties consumerProperties;
-    private final List<Consumer<K, V>> consumers;
+    private final int numConsumers;
 
     public ConsumerPool(int numConsumers, List<? extends Processor<K, V>> processors, List<String> topics, Properties consumerProperties) {
         this.numConsumers = numConsumers;
@@ -34,7 +34,7 @@ public class ConsumerPool<K, V> implements AutoCloseable {
         this.executorService = Executors.newFixedThreadPool(numConsumers, threadFactory);
     }
 
-    public void start() {
+    public synchronized void start() {
         logger.info("Start consumers...");
         for (int i = 0; i < numConsumers; i++) {
             Consumer<K, V> consumer = new Consumer<>(
@@ -50,7 +50,7 @@ public class ConsumerPool<K, V> implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public synchronized void close() throws Exception {
         consumers.forEach(Consumer::shutdown);
         executorService.shutdownNow();
         executorService.awaitTermination(2, TimeUnit.SECONDS);

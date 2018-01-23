@@ -1,8 +1,8 @@
-package kafkatemplate.app;
+package kafkaclientframe.app;
 
-import kafkatemplate.kafka.ConsumerPool;
-import kafkatemplate.kafka.config.KafkaConfig;
-import kafkatemplate.process.impl.Sample;
+import kafkaclientframe.kafka.ConsumerPool;
+import kafkaclientframe.kafka.config.KafkaConfig;
+import kafkaclientframe.process.impl.Sample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

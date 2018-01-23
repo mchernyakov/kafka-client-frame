@@ -1,7 +1,7 @@
 
-package kafkatemplate.kafka.config;
+package kafkaclientframe.kafka.config;
 
-import kafkatemplate.util.GeneralProperties;
+import kafkaclientframe.util.GeneralProperties;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -12,9 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author chernyakov
- */
+
 public class KafkaConfig {
 
     private static final String KAFKA_PROPERTIES_FILE = "./kafka.properties";

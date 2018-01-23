@@ -1,13 +1,11 @@
-package kafkatemplate.process.impl;
+package kafkaclientframe.process.impl;
 
 
-import kafkatemplate.process.Processor;
+import kafkaclientframe.process.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by chernyakov on 07.02.17.
- */
+
 public class Sample implements Processor<String, String> {
 
     private static Logger log = LoggerFactory.getLogger(Sample.class.getName());

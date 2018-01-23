@@ -1,6 +1,6 @@
-package kafkatemplate.kafka;
+package kafkaclientframe.kafka;
 
-import kafkatemplate.kafka.config.KafkaConfig;
+import kafkaclientframe.kafka.config.KafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;

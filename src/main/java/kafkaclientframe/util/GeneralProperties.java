@@ -1,4 +1,4 @@
-package kafkatemplate.util;
+package kafkaclientframe.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

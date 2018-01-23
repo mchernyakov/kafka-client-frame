@@ -1,4 +1,4 @@
-package kafkatemplate.util;
+package kafkaclientframe.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 

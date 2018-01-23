@@ -1,6 +1,6 @@
-package kafkatemplate.kafka;
+package kafkaclientframe.kafka;
 
-import kafkatemplate.process.Processor;
+import kafkaclientframe.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
