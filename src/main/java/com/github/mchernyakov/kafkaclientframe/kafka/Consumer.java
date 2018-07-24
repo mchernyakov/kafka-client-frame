@@ -1,6 +1,6 @@
-package kafkaclientframe.kafka;
+package com.github.mchernyakov.kafkaclientframe.kafka;
 
-import kafkaclientframe.process.Processor;
+import com.github.mchernyakov.kafkaclientframe.process.Processor;
 import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;

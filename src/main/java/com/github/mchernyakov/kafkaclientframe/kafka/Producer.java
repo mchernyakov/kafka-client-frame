@@ -1,6 +1,6 @@
-package kafkaclientframe.kafka;
+package com.github.mchernyakov.kafkaclientframe.kafka;
 
-import kafkaclientframe.kafka.config.KafkaConfig;
+import com.github.mchernyakov.kafkaclientframe.kafka.config.KafkaConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;

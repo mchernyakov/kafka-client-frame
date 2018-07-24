@@ -9,7 +9,7 @@
     <version>1.0.0</version>
 
     <properties>
-        <mainClass>kafkaclientframe.app.Main</mainClass>
+        <mainClass>com.github.mchernyakov.kafkaclientframe.app.Main</mainClass>
     </properties>
 
     <dependencies>

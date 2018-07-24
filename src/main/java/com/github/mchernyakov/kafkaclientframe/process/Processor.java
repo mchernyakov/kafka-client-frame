@@ -1,4 +1,4 @@
-package kafkaclientframe.process;
+package com.github.mchernyakov.kafkaclientframe.process;
 
 
 public interface Processor<K,V> {

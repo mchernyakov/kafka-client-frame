@@ -1,7 +1,7 @@
-package kafkaclientframe.process.impl;
+package com.github.mchernyakov.kafkaclientframe.process.impl;
 
 
-import kafkaclientframe.process.Processor;
+import com.github.mchernyakov.kafkaclientframe.process.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 
-package kafkaclientframe.kafka.config;
+package com.github.mchernyakov.kafkaclientframe.kafka.config;
 
-import kafkaclientframe.util.GeneralProperties;
+import com.github.mchernyakov.kafkaclientframe.util.GeneralProperties;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

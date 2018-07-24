@@ -1,4 +1,4 @@
-package kafkaclientframe.util;
+package com.github.mchernyakov.kafkaclientframe.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
